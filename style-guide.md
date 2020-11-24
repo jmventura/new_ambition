@@ -1,6 +1,6 @@
-# RESTful API guidelines
+# BNL RESTful API guidelines
 
-## Introduction
+## 1. Introduction
 
 Modern software architectures center around decoupled microservices that provide functionality via RESTful APIs with a JSON payload. APIs most purely express what systems do, and are therefore highly valuable business assets. Designing high-quality, long-lasting APIs has become even more critical as modern companies strategy aims to develop lots of public APIs for external business partners to use via third-party applications, leveraging new busines models in the process.
 
@@ -33,7 +33,7 @@ In case guidelines are changing, following rules apply:
 
 Furthermore you should keep in mind that once an API becomes public externally available, it has to be re-reviewed and changed according to current guidelines - for sake of overall consistency.
 
-## Principles
+## 2. Principles
 
 ### API design principles
 
@@ -82,7 +82,7 @@ Elements of API First are also this API Guidelines and a standardized API review
 
 It is important to learn, that API First is **not in conflict with the agile development principles**. Service applications should evolve incrementally — and so its APIs. Of course, API specifications will and should evolve iteratively in different cycles; however, each starting with draft status and *early* team and peer review feedback. API may change and profit from implementation concerns and automated testing feedback. API evolution during development life cycle may include breaking changes for not yet productive features and as long as we have aligned the changes with the clients. Hence, API First does *not* mean that you must have 100% domain and requirement understanding and can never produce code before you have defined the complete API and get it confirmed by peer review. On the other hand, API First obviously is in conflict with the bad practice of publishing API definition and asking for peer review after the service integration or even the service productive operation has started. It is crucial to request and get early feedback — as early as possible, but not before the API changes are comprehensive with focus to the next evolution step and have a certain quality (including API Guideline compliance), already confirmed via team internal reviews.
 
-## General guidelines
+## 3. General guidelines
 
 The titles are marked with the corresponding labels: **MUST**, **SHOULD**, **MAY**.
 
@@ -119,23 +119,23 @@ The user manual must be published online, include a link to the API user manual 
 
 ### **MUST** write APIs using U.S. English
 
-## Meta information
+## 4. Meta information
 
 ### **MUST** contain API meta information
 
 API specifications must contain the following Open API meta information to allow for API management:
 
 - `#/info/title` as (unique) identifying, functional descriptive name of the API
-- `#/info/version` to distinguish API specifications versions following [semantic rules](#semantic-rules)
+- `#/info/version` to distinguish API specifications versions following [semantic rules](#402)
 - `#/info/description` containing a proper description of the API
 - `#/info/contact/{name,url,email}` containing the responsible team
 
 Following Open API extension properties **must** be provided in addition:
 
-- `#/info/x-api-id` unique [identifier](#api-identifiers) of the API 
-- `#/info/x-audience` intended [target](#target-audience) audience of the API
+- `#/info/x-api-id` unique [identifier](#403) of the API 
+- `#/info/x-audience` intended [target](#401) audience of the API
 
-### <a id="semantic-rules"></a> **MUST** use semantic versioning
+### <a id="402"></a> **MUST** use semantic versioning
 
 Open API allows to specify the API specification version in `#/info/version`. To share a common semantic of version information we expect API designers to comply to [Semantic Versioning 2.0](http://semver.org/spec/v2.0.0.html) rules `1` to `8` and `11` restricted to the format <MAJOR>.<MINOR>.<PATCH> for versions as follows:
 
@@ -160,7 +160,7 @@ info:
   <...>
 ```
 
-### <a id="api-identifiers"></a> **MUST** provide API identifiers
+### <a id="403"></a> **MUST** provide API identifiers
 
 Each API specification must be provisioned with a globally unique and immutable API identifier. The API identifier is defined in the `info`-block of the Open API specification and must conform to the following definition:
 
@@ -175,7 +175,7 @@ Each API specification must be provisioned with a globally unique and immutable 
     as a sequence of versions.
 ```
 
-API specifications will evolve and any aspect of an Open API specification may change. We require API identifiers because we want to support API clients and providers with API lifecycle management features, like change trackability and history or automated backward compatibility checks. The immutable API identifier allows the identification of all API specification versions of an API evolution. By using [API semantic version information](#api-identifiers) or [API publishing date](#publish) as order criteria you get the **version** or **publication history** as a sequence of API specifications.
+API specifications will evolve and any aspect of an Open API specification may change. We require API identifiers because we want to support API clients and providers with API lifecycle management features, like change trackability and history or automated backward compatibility checks. The immutable API identifier allows the identification of all API specification versions of an API evolution. By using [API semantic version information](#403) or [API publishing date](#publish) as order criteria you get the **version** or **publication history** as a sequence of API specifications.
 
 **Note**: While it is nice to use human readable API identifiers based on self-managed URNs, it is recommend to stick to UUIDs to relief API designers from any urge of changing the API identifier while evolving the API. Example:
 
@@ -189,7 +189,7 @@ info:
   <...>
 ```
 
-### <a id="target-audience"></a> **MUST** provide API audience
+### <a id="401"></a> **MUST** provide API audience
 
 Each API must be classified with respect to the intended target **audience** supposed to consume the API, to facilitate differentiated standards on APIs for discoverability, changeability, quality of design and documentation, as well as permission granting. We differentiate the following API audience groups with clear organisational and legal boundaries:
 
@@ -246,11 +246,11 @@ info:
   <...>
 ```
 
-## Security
+## 5. Security
 
-### **MUST** secure endpoints with OAuth 2.0
+### <a id="501"></a> **MUST** secure endpoints with {TBD}
 
-Every API endpoint needs to be secured using OAuth 2.0. Please refer to the [Authentication section](https://swagger.io/docs/specification/authentication/) of the official Open API specification on how to specify security definitions in your API.
+Every API endpoint needs to be secured using `[HTTP Authorization Headert {Basic, Bearer} | API Keys | OAuth 2.0 | OpenID Connect]`. Please refer to the [Authentication section](https://swagger.io/docs/specification/authentication/) of the official Open API specification on how to specify security definitions in your API.
 
 The following code snippet shows how to define the authorization scheme using a bearer token (e.g. JWT token).
 
@@ -270,9 +270,9 @@ security:
   - BearerAuth: [ scope_1, scope_2 ]
 ```
 
-### [**MUST** define and assign permissions (scopes) [105\]](https://opensource.bnl.com/restful-api-guidelines/#105)
+### <a id="502"></a> **MUST** define and assign permissions (scopes)
 
-APIs must define permissions to protect their resources. Thus, at least one permission must be assigned to each endpoint. Permissions are defined as shown in the [previous section](https://opensource.bnl.com/restful-api-guidelines/#104).
+APIs must define permissions to protect their resources. Thus, at least one permission must be assigned to each endpoint. Permissions are defined as shown in the [previous section](#501).
 
 The naming schema for permissions corresponds to the naming schema for [hostnames](https://opensource.bnl.com/restful-api-guidelines/#224) and [event type names](https://opensource.bnl.com/restful-api-guidelines/#213). Please refer to [**MUST** follow naming convention for permissions (scopes)](https://opensource.bnl.com/restful-api-guidelines/#225) for designing permission names.
 
@@ -312,7 +312,7 @@ paths:
 
 Hint: you need not explicitly define the "Authorization" header; it is a standard header so to say implicitly defined via the security section.
 
-### [**MUST** follow naming convention for permissions (scopes) [225\]](https://opensource.bnl.com/restful-api-guidelines/#225)
+### **MUST** follow naming convention for permissions (scopes)
 
 As long as the [functional naming](https://opensource.bnl.com/restful-api-guidelines/#223) is not yet supported by our permission registry, permission names in APIs must conform to the following naming pattern:
 

@@ -289,7 +289,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/ValueList"
 
-  # TO BE YET DEFINED
+  # YET TO BE DEFINED
 
   /documents:
     get:
@@ -586,6 +586,9 @@ components:
 
     SurveyQuestionAnswer:
       type: object
+      required:
+        - question_id
+        - answers
       properties:
         question_id:
           type: string
@@ -593,6 +596,7 @@ components:
           format: uuid
           example: d290f1ee-6c54-4b01-90e6-d701748f0851
         answers:
+          description: The answers given by the user
           type: array
           items:
             type: object
@@ -1254,6 +1258,7 @@ components:
           enum:
             - DIGITAL
             - PAPER
+        # consider the usage of a pointer to a file descriptor instead of embedding the BLOB
         data:
           type: string
           description: Base64 representation of the document bytes
@@ -1289,6 +1294,8 @@ components:
               type: boolean
         selection_rules:
           $ref: "#/components/schemas/SelectionRuleSet"
+        # TBD premium_rules: min, max, etc
+
         premium:
           $ref: "#/components/schemas/Premium"
 
