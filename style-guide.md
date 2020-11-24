@@ -86,7 +86,7 @@ It is important to learn, that API First is **not in conflict with the agile dev
 
 The titles are marked with the corresponding labels: **MUST**, **SHOULD**, **MAY**.
 
-### **MUST** follow API first principle
+### <a id="301"></a>**MUST** follow API first principle
 
 You must follow the API First Principle, more specifically:
 
@@ -94,7 +94,7 @@ You must follow the API First Principle, more specifically:
 - You must design your APIs consistently with this guidelines
 - You must call for early review feedback from peers and client developers, and apply an API review process for all component external APIs
 
-### **MUST** provide API specification using Open API
+### **<a id="302"></a>MUST** provide API specification using Open API
 
 We use the [Open API specification](http://swagger.io/specification/) as standard to define API specification files. API designers are required to provide the API specification using a single **self-contained YAML** file to improve readability. We encourage to use **Open API 3.0** version, but still support **Open API 2.0** (a.k.a. Swagger 2).
 
@@ -102,11 +102,11 @@ The API specification files should be subject to version control using a source 
 
 You must / should publish] the component external / internal API specifications with the deployment of the implementing service, and, hence.
 
-### **MUST** only use durable and immutable remote references 
+### **<a id="303"></a>MUST** only use durable and immutable remote references 
 
 Normally, API specification files must be **self-contained**, i.e. files should not contain references to local or remote content, e.g. `../fragment.yaml#/element`. The reason is, that the content referred to is *in general* **not durable** and **not immutable**. As a consequence, the semantic of an API may change in unexpected ways.
 
-### **SHOULD** provide API user manual
+### **<a id="304"></a>SHOULD** provide API user manual
 
 In addition to the API Specification, it is good practice to provide an API user manual to improve client developer experience, especially of engineers that are less experienced in using this API. A helpful API user manual typically describes the following API aspects:
 
@@ -117,11 +117,11 @@ In addition to the API Specification, it is good practice to provide an API user
 
 The user manual must be published online, include a link to the API user manual into the API specification using the `#/externalDocs/url` property.
 
-### **MUST** write APIs using U.S. English
+### <a id="305"></a>**MUST** write APIs using U.S. English
 
 ## 4. Meta information
 
-### **MUST** contain API meta information
+### **<a id="401"></a>MUST** contain API meta information
 
 API specifications must contain the following Open API meta information to allow for API management:
 
@@ -189,7 +189,7 @@ info:
   <...>
 ```
 
-### <a id="401"></a> **MUST** provide API audience
+### <a id="404"></a> **MUST** provide API audience
 
 Each API must be classified with respect to the intended target **audience** supposed to consume the API, to facilitate differentiated standards on APIs for discoverability, changeability, quality of design and documentation, as well as permission granting. We differentiate the following API audience groups with clear organisational and legal boundaries:
 
@@ -274,7 +274,7 @@ security:
 
 APIs must define permissions to protect their resources. Thus, at least one permission must be assigned to each endpoint. Permissions are defined as shown in the [previous section](#501).
 
-The naming schema for permissions corresponds to the naming schema for [hostnames](https://opensource.bnl.com/restful-api-guidelines/#224) and [event type names](https://opensource.bnl.com/restful-api-guidelines/#213). Please refer to [**MUST** follow naming convention for permissions (scopes)](https://opensource.bnl.com/restful-api-guidelines/#225) for designing permission names.
+The naming schema for permissions corresponds to the naming schema for [hostnames](https://opensource.bnl.com/restful-api-guidelines/#224) and [event type names](https://opensource.bnl.com/restful-api-guidelines/#213). Please refer to [**MUST** follow naming convention for permissions (scopes)](#503) for designing permission names.
 
 APIs should stick to component specific permissions without resource extension to avoid governance complexity of too many fine grained permissions. For the majority of use cases, restricting access to specific API endpoints using read and write is sufficient for controlling access for client types like merchant or retailer business partners, customers or operational staff. However, in some situations, where the API serves different types of resources for different owners, resource specific scopes may make sense.
 
@@ -312,9 +312,9 @@ paths:
 
 Hint: you need not explicitly define the "Authorization" header; it is a standard header so to say implicitly defined via the security section.
 
-### **MUST** follow naming convention for permissions (scopes)
+### **<a id="503"></a>MUST** follow naming convention for permissions (scopes)
 
-As long as the [functional naming](https://opensource.bnl.com/restful-api-guidelines/#223) is not yet supported by our permission registry, permission names in APIs must conform to the following naming pattern:
+Permission names in APIs must conform to the following naming pattern:
 
 ```
 <permission> ::= <standard-permission> |  -- should be sufficient for majority of use cases
@@ -734,9 +734,9 @@ Please notice that the list is not exhaustive and everyone is encouraged to prop
 | `string`  | `byte`                                                       | [RFC 7493](https://tools.ietf.org/html/rfc7493)              | `"dGVzdA=="`                       |
 | `string`  | [`date`](https://opensource.bnl.com/restful-api-guidelines/#126) | [RFC 3339](https://tools.ietf.org/html/rfc3339)              | `"2019-07-30"`                     |
 | `string`  | [`date-time`](https://opensource.bnl.com/restful-api-guidelines/#126) | [RFC 3339](https://tools.ietf.org/html/rfc3339)              | `"2019-07-30T06:43:40.252Z"`       |
-| `string`  | `email`                                                      | [RFC 5322](https://tools.ietf.org/html/rfc5322)              | `"example@bnl.de"`             |
+| `string`  | `email`                                                      | [RFC 5322](https://tools.ietf.org/html/rfc5322)              | `"example@bnl.de"`                 |
 | `string`  | `gtin-13`                                                    | [GTIN](https://en.wikipedia.org/wiki/Global_Trade_Item_Number) | `"5710798389878"`                  |
-| `string`  | `hostname`                                                   | [RFC 1034](https://tools.ietf.org/html/rfc1034)              | `"www.bnl.de"`                 |
+| `string`  | `hostname`                                                   | [RFC 1034](https://tools.ietf.org/html/rfc1034)              | `"www.bnl.de"`                     |
 | `string`  | `ipv4`                                                       | [RFC 2673](https://tools.ietf.org/html/rfc2673)              | `"104.75.173.179"`                 |
 | `string`  | `ipv6`                                                       | [RFC 2673](https://tools.ietf.org/html/rfc2673)              | `"2600:1401:2::8a"`                |
 | `string`  | [`iso-3166`](https://opensource.bnl.com/restful-api-guidelines/#170) | [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) | `"DE"`                             |
@@ -746,7 +746,7 @@ Please notice that the list is not exhaustive and everyone is encouraged to prop
 | `string`  | `password`                                                   |                                                              | `"secret"`                         |
 | `string`  | `regex`                                                      | [ECMA 262](http://www.ecma-international.org/publications/files/ECMA-ST/Ecma-262.pdf) | `"^[a-z0-9]+$"`                    |
 | `string`  | [`time`](https://opensource.bnl.com/restful-api-guidelines/#126) | [RFC 3339](https://tools.ietf.org/html/rfc3339)              | `"06:43:40.252Z"`                  |
-| `string`  | `uri`                                                        | [RFC 3986](https://tools.ietf.org/html/rfc3986)              | `"https://www.bnl.de/"`        |
+| `string`  | `uri`                                                        | [RFC 3986](https://tools.ietf.org/html/rfc3986)              | `"https://www.bnl.de/"`            |
 | `string`  | `uri-template`                                               | [RFC 6570](https://tools.ietf.org/html/rfc6570)              | `"/users/{id}"`                    |
 | `string`  | [`uuid`](https://opensource.bnl.com/restful-api-guidelines/#144) | [RFC 4122](https://tools.ietf.org/html/rfc4122)              | `"e2ab873e-b295-11e9-9c02-…"`      |
 
