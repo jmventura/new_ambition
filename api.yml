@@ -377,7 +377,7 @@ paths:
                   type: string
                 desk_management:
                   type: string
-                # prefer a bollean flag to a enum when options are only two (yes/no)
+                # prefer a boolean flag to a enum when options are only two (yes/no)
                 should_print:
                   description: Flag to determine if all the related documentation should be issued digitally or printed
                   type: boolean
@@ -777,7 +777,7 @@ components:
         status:
           type: string
           description: The Policy status
-          # FIXME Try to keep all enum entries in plain English (do not mix laguages)
+          # FIXME Try to keep all enum entries in plain English (do not mix languages)
           enum:
             - ATTIVA
             - RECESSA
@@ -787,7 +787,7 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Premium"
-        # TBD is the Id enough or SHOUD we ask for the Proposal object?
+        # TBD is the Id enough or SHOULD we ask for the Proposal object?
         proposal_id:
           type: string
           description: The Proposal identification code
@@ -896,7 +896,7 @@ components:
         status_code:
           type: string
           description: Activity status code
-          # TBDX
+          # TBD
           enum:
             - A
             - B

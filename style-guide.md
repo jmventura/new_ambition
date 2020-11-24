@@ -248,7 +248,7 @@ info:
 
 ## 5. Security
 
-### <a id="501"></a> **MUST** secure endpoints with {TBD}
+### <a id="501"></a> **MUST** secure endpoints
 
 Every API endpoint needs to be secured using `[HTTP Authorization Headert {Basic, Bearer} | API Keys | OAuth 2.0 | OpenID Connect]`. Please refer to the [Authentication section](https://swagger.io/docs/specification/authentication/) of the official Open API specification on how to specify security definitions in your API.
 
@@ -1762,7 +1762,7 @@ API designers should also think about a **troubleshooting board** as part of the
 
 You must only use standardized HTTP status codes consistently with their intended semantics. You must not invent new HTTP status codes.
 
-RFC standards define ~60 different HTTP status codes with specific semantics (mainly [RFC7231](https://tools.ietf.org/html/rfc7231#section-6) and [RFC 6585](https://tools.ietf.org/html/rfc6585)) — and there are upcoming new ones, e.g. [draft legally-restricted-status](https://tools.ietf.org/html/draft-tbray-http-legally-restricted-status-05). See overview on all error codes on [Wikipedia](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes) or via https://httpstatuses.com/) also inculding 'unofficial codes', e.g. used by popular web servers like Nginx.
+RFC standards define ~60 different HTTP status codes with specific semantics (mainly [RFC7231](https://tools.ietf.org/html/rfc7231#section-6) and [RFC 6585](https://tools.ietf.org/html/rfc6585)) — and there are upcoming new ones, e.g. [draft legally-restricted-status](https://tools.ietf.org/html/draft-tbray-http-legally-restricted-status-05). See overview on all error codes on [Wikipedia](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes) or via https://httpstatuses.com/) also including 'unofficial codes', e.g. used by popular web servers like Nginx.
 
 Below we list the most commonly used and best understood HTTP status codes, consistent with their semantic in the RFCs. APIs should only use these to prevent misconceptions that arise from less commonly used HTTP status codes.
 
@@ -1776,7 +1776,7 @@ Below we list the most commonly used and best understood HTTP status codes, cons
 | [201](https://opensource.bnl.com/restful-api-guidelines/#status-code-201) | Created - Returned on successful entity creation. You are free to return either an empty response or the created resource in conjunction with the Location header. (More details found in the [Common headers](https://opensource.bnl.com/restful-api-guidelines/#common-headers).) *Always* set the Location header. | [`POST`](https://opensource.bnl.com/restful-api-guidelines/#post), [`PUT`](https://opensource.bnl.com/restful-api-guidelines/#put) |
 | [202](https://opensource.bnl.com/restful-api-guidelines/#status-code-202) | Accepted - The request was successful and will be processed asynchronously. | [`POST`](https://opensource.bnl.com/restful-api-guidelines/#post), [`PUT`](https://opensource.bnl.com/restful-api-guidelines/#put), [`PATCH`](https://opensource.bnl.com/restful-api-guidelines/#patch), [`DELETE`](https://opensource.bnl.com/restful-api-guidelines/#delete) |
 | [204](https://opensource.bnl.com/restful-api-guidelines/#status-code-204) | No content - There is no response body.                      | [`PUT`](https://opensource.bnl.com/restful-api-guidelines/#put), [`PATCH`](https://opensource.bnl.com/restful-api-guidelines/#patch), [`DELETE`](https://opensource.bnl.com/restful-api-guidelines/#delete) |
-| [207](https://opensource.bnl.com/restful-api-guidelines/#status-code-207) | Multi-Status - The response body contains multiple status informations for different parts of a batch/bulk request (see [**MUST** use code 207 for batch or bulk requests](https://opensource.bnl.com/restful-api-guidelines/#152)). | [`POST`](https://opensource.bnl.com/restful-api-guidelines/#post), ([`DELETE`](https://opensource.bnl.com/restful-api-guidelines/#delete)) |
+| [207](https://opensource.bnl.com/restful-api-guidelines/#status-code-207) | Multi-Status - The response body contains multiple status information for different parts of a batch/bulk request (see [**MUST** use code 207 for batch or bulk requests](https://opensource.bnl.com/restful-api-guidelines/#152)). | [`POST`](https://opensource.bnl.com/restful-api-guidelines/#post), ([`DELETE`](https://opensource.bnl.com/restful-api-guidelines/#delete)) |
 
 #### [Redirection codes](https://opensource.bnl.com/restful-api-guidelines/#redirection-codes)
 
