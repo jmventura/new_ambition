@@ -1,0 +1,67 @@
+openapi: "3.0.2"
+info:
+  title: Events
+  version: "1.0"
+servers:
+  - url: https://api.server.test/v1
+
+paths:
+  /events:
+    get:
+      responses:
+        "200":
+          description: OK
+
+components:
+  schemas:
+    Collection:
+      type: object
+      properties:
+        total:
+          type: integer
+          description: The total number of items
+        records:
+          type: array
+          description: The records array defining this collection, at least a single item must be wrapped inside a collection.
+          items:
+            $ref: "#/components/schemas/Record"
+        attributes:
+          type: array
+          description: Any eventually extended attribute gos here
+          items:
+            $ref: "#/components/schemas/Attribute"
+
+    Record:
+      type: object
+      properties:
+        entity:
+          description: The Business Entity, usually mapped as a REST resource, to define the record type
+          type: string
+        entity_id:
+          description: The id, usually an UUID, that unequivocally identifies the Business Entity instance
+          type: string
+        url:
+          description: The URI pointing to the resource instance
+          type: string
+        attributes:
+          description: Any eventually extended attribute gos here
+          type: array
+          items:
+            $ref: "#/components/schemas/Attribute"
+
+    Attribute:
+      type: object
+      properties:
+        key:
+          description: The attribute key, usually referred as `field name`
+          type: string
+        value:
+          description: The attribute value
+          type: string
+        type:
+          description: The attribute value type, as JSON primitive
+          type: string
+          enum:
+            - string
+            - boolean
+            - number
