@@ -1,0 +1,1337 @@
+openapi: 3.0.0
+servers:
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/jmventura/new_ambition/1.1.0
+info:
+  description: New Ambition REST API
+  version: 1.2.0
+  title: New Ambition
+  contact:
+    email: federico.pastore@bnlmail.com
+  license:
+    name: Apache 2.0
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+paths:
+  /products:
+    get:
+      description: Get Product list
+      parameters:
+        - in: query
+          name: category
+          description: The Product category
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      description: The Product Id
+                      format: uuid
+                      example: d290f1ee-6c54-4b01-90e6-d701748f0851
+                    title:
+                      type: string
+                    description:
+                      type: string
+  /products/{id}:
+    get:
+      description: Get product by Id
+      parameters:
+        - in: path
+          name: id
+          description: The Document Id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+  /surveys:
+    get:
+      summary: List available Surveys for a given Product
+      operationId: listSurveys
+      description: All the available Surveys for a given Product can be listed by passing in the appropriate Product Id
+      parameters:
+        - in: query
+          name: product_id
+          description: pass the Product Id to list the available Surveys
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - in: query
+          name: survey_type_id
+          #TODO
+          description: TODO
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - in: query
+          name: subject_type
+          required: true
+          schema:
+            type: string
+            enum:
+              - INDIVIDUAL
+              - LEGAL_ENTITY
+      responses:
+        "200":
+          description: Surveys matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  properties:
+                    id:
+                      description: The Survey Id
+                      type: string
+                      format: uuid
+                    title:
+                      description: The Survey title
+                      type: string
+                    description:
+                      description: The Survey description
+                      type: string
+        "400":
+          description: bad input parameter
+  /survey/{id}:
+    get:
+      summary: Get Survey by Id
+      operationId: getSurvey
+      description: Get a single Survey by passing its Id
+      parameters:
+        - in: path
+          name: id
+          description: pass the Survey Id to get Survey object
+          required: true
+          schema:
+            type: string
+            format: uuid
+
+      responses:
+        "200":
+          description: Survey matching Id
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Survey"
+        "400":
+          description: bad input parameter
+  # ADD get /survey/{survey_id}/submissions/{submission_id}
+  /survey/{id}/submissions:
+    post:
+      summary: Submit a Survey result
+      operationId: submitSurvey
+      description: Evaluate a Survey Submission before to move forward the sales process
+      parameters:
+        - in: path
+          name: id
+          description: pass the Survey Id to submit the Survey result
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        description: The Survey results Submission
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SurveySubmission"
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum:
+                      - SUCCESS
+                      - WARNING
+                      - FAIL
+                  messages:
+                    type: array
+                    items:
+                      type: string
+  /quotations:
+    post:
+      summary: Create a Quotation
+      operationId: createQuotation
+      description: Create a Product Quotation
+      requestBody:
+        description: The Quotation to be created
+        required: true
+        content:
+          application/json:
+            schema:
+              # TODO define the minimal set of information needed to creat a blank Quotation
+              $ref: "#/components/schemas/Quotation"
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Quotation"
+  /quotations/{id}:
+    # For the sake of REST compliance this resource MUST be treated as such, therefore any mutation must be implemented as an CRUD operation in the form of a PUT or PATCH HTTP method
+    put:
+      operationId: updateQuotation
+      description: Upgrade or Downgrade a product Quotation
+      parameters:
+        - in: path
+          name: id
+          description: The Quotation Id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        description: The Quotation to be updated
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                quotation:
+                  $ref: "#/components/schemas/Quotation"
+      responses:
+        204:
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Quotation"
+
+  /value-lists:
+    get:
+      summary: List all available value lists
+      operationId: listValuelists
+      description: List all available value lists
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ValueList"
+  /value-lists/{id}:
+    get:
+      summary: Get a value list items
+      operationId: getValuelists
+      description: Get a value list items
+      parameters:
+        - in: path
+          name: id
+          description: The value list id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValueList"
+
+  # YET TO BE DEFINED
+
+  /documents:
+    get:
+      description: List all documents for a certain Proposal or Policy
+      parameters:
+        - in: query
+          name: proposal_id
+          description: The Proposal Id
+          required: false
+          schema:
+            type: string
+            format: uuid
+        - in: query
+          name: policy_id
+          description: The Policy Id
+          required: false
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  properties:
+                    id:
+                      description: The Document Id
+                      type: string
+                      format: uuid
+                    title:
+                      description: The Document title
+                      type: string
+                      example: Polizza
+                    extension:
+                      description: The Document file extension
+                      type: string
+                      example: pdf
+  /documents/{id}:
+    get:
+      description: Get a Document by Id
+      parameters:
+        - in: path
+          name: id
+          description: The Document Id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Document"
+
+  /proposals:
+    post:
+      summary: Create Proposal
+      operationId: createProposal
+      description: Create a Proposal from a Quotation?
+      requestBody:
+        description: The data structure needed to create a Proposal
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                valid_from:
+                  type: string
+                  format: date-time
+                valid_to:
+                  type: string
+                  format: date-time
+                # ideally this field SHOULD be just the Quotation Id, for the sake of lowering the entry barrier we just POST the Quotation object
+                quotation:
+                  $ref: "#/components/schemas/Quotation"
+                postal_address:
+                  $ref: "#/components/schemas/Address"
+                desk_competence:
+                  type: string
+                desk_management:
+                  type: string
+                # prefer a boolean flag to a enum when options are only two (yes/no)
+                should_print:
+                  description: Flag to determine if all the related documentation should be issued digitally or printed
+                  type: boolean
+                # FIXME clear contact schema (as of now this is a Contact flagged as email)
+                email:
+                  $ref: "#/components/schemas/Contact"
+                surveys:
+                  type: array
+                  description: List of objects that indicate all completed surveys and their evaluations before generating the proposal
+                  items:
+                    $ref: "#/components/schemas/SurveySubmission"
+
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Proposal"
+  /proposals/{id}:
+    get:
+      summary: Get a Proposal
+      operationId: getProposal
+      description: Get a Proposal by Id
+      parameters:
+        - in: path
+          name: id
+          description: The Quotation Id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Proposal"
+    put:
+      summary: Update a Proposal
+      operationId: updateProposal
+      parameters:
+        - in: path
+          name: id
+          description: The Proposal Id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        description: The data structure needed to create a Proposal
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Quotation"
+      responses:
+        204:
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Proposal"
+  /policies:
+    post:
+      summary: Create a Policy
+      operationId: createPolicy
+      description: Create a Policy
+      requestBody:
+        description: The data structure needed to create a Policy
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Policy"
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Policy"
+  /policies/{id}:
+    get:
+      summary: Get a Policy
+      operationId: getPolicy
+      description: Get a Policy by Id
+      parameters:
+        - in: path
+          name: id
+          description: The Policy Id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Policy"
+    put:
+      summary: Update a Policy
+      operationId: updatePolicy
+      parameters:
+        - in: path
+          name: id
+          description: The Policy Id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        description: The data structure needed to create a Policy
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Policy"
+      responses:
+        204:
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Policy"
+
+components:
+  schemas:
+    Survey:
+      type: object
+      required:
+        - id
+        - product_id
+        - title
+        - questions
+      properties:
+        id:
+          type: string
+          description: The Product identification code for the Product the Survey applies to
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        product_id:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        survey_type_id:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+          description: This field represents a Survey Type coming from a value list
+        title:
+          type: string
+          example: Questionario ABC...
+        description:
+          type: string
+        sections:
+          type: array
+          items:
+            type: object
+            properties:
+              title:
+                type: string
+              description:
+                type: string
+              questions:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SurveyQuestion"
+
+    SurveyQuestion:
+      type: object
+      required:
+        - id
+        - title
+        - choices
+        - multiple
+        - required
+      properties:
+        id:
+          type: string
+          description: The Question identification code
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        title:
+          type: string
+          example: Question 1...
+        description:
+          type: string
+          description: This field can be used as a tooltip for any front end
+        choices:
+          type: array
+          items:
+            $ref: "#/components/schemas/SurveyQuestionChoice"
+        multiple:
+          type: boolean
+        required:
+          type: boolean
+          default: true
+        default:
+          description: The default choice Id. In case it's absent no choice is to be considered selected
+          type: array
+          items:
+            type: string
+
+    SurveyQuestionChoice:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: string
+          description: The Choice identification code
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        title:
+          type: string
+          example: Choice 1...
+        description:
+          type: string
+          description: This field can be used as a tooltip for any front end
+
+    SurveyQuestionAnswer:
+      type: object
+      required:
+        - question_id
+        - answers
+      properties:
+        question_id:
+          type: string
+          description: The Question identification code
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        answers:
+          description: The answers given by the user
+          type: array
+          items:
+            type: object
+            properties:
+              choice_id:
+                type: string
+                description: The Choice identification code
+                format: uuid
+                example: d290f1ee-6c54-4b01-90e6-d701748f0851
+              value:
+                type: string
+                description: The user selection
+                example: the user selection
+
+    SurveySubmission:
+      type: object
+      properties:
+        survey_id:
+          type: string
+          description: The Survey identification code
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        customer_id:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        product_id:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        answers:
+          type: array
+          items:
+            $ref: "#/components/schemas/SurveyQuestionAnswer"
+
+    Quotation:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The Quotation identification code
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        product_id:
+          type: string
+          description: Unique code of the product
+        effect_date:
+          type: string
+          format: date-time
+          description: Date from which the insurance policy takes effect
+        premiums:
+          type: array
+          items:
+            $ref: "#/components/schemas/Premium"
+        agreements:
+          type: array
+          description: Array of customer agreements codes comming from the bank systems
+          items:
+            type: string
+        subjects:
+          type: array
+          description: Array of subjects (individual or legal entities) connected to the Quotation
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                description: Flag to determine the subjet type
+                enum:
+                  - LEGAL_ENTITY
+                  - INDIVIDUAL
+              role:
+                type: string
+                enum:
+                  - CONTRAENTE
+                  - BENEFICIARIO
+                  - ASSICURATO
+              item:
+                type: object
+                oneOf:
+                  - $ref: "#/components/schemas/Individual"
+                  - $ref: "#/components/schemas/LegalEntity"
+        assets:
+          type: array
+          description: Array of Asset to be insured
+          items:
+            $ref: "#/components/schemas/Asset"
+        discounts:
+          type: array
+          description: Array of discounts applied; the total discount amount MUST be calculated by summing all the items together
+          items:
+            $ref: "#/components/schemas/Discount"
+        warranties:
+          type: array
+          description: Array of Warranty
+          items:
+            $ref: "#/components/schemas/Warranty"
+
+    Proposal:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The Proposal identification code
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+
+    Policy:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The Policy identification code
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        type:
+          type: string
+          description: Identifies the type of Policy
+          enum:
+            - INDIVIDUAL
+            - GROUP
+        product_id:
+          type: string
+          description: The Product identification code
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        parter_id:
+          type: string
+          description: The partner identification code
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        status:
+          type: string
+          description: The Policy status
+          # FIXME Try to keep all enum entries in plain English (do not mix languages)
+          enum:
+            - ATTIVA
+            - RECESSA
+            - DISDETTA
+            - ANNULLATA
+        premiums:
+          type: array
+          items:
+            $ref: "#/components/schemas/Premium"
+        # TBD is the Id enough or SHOULD we ask for the Proposal object?
+        proposal_id:
+          type: string
+          description: The Proposal identification code
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+
+    Asset:
+      type: object
+      required:
+        - asset_type
+        - subjects
+      properties:
+        id:
+          type: string
+          description: The Asset identification code
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        type:
+          type: string
+          description: Code that identifies the type of asset to be insured
+          # TB Value List
+        discount:
+          type: number
+          format: double
+          description: Discount applied on the premium linked to the single asset to be insured
+        premium:
+          $ref: "#/components/schemas/Premium"
+        warranties:
+          type: array
+          items:
+            $ref: "#/components/schemas/Warranty"
+        # TBD
+        contract_terms:
+          type: array
+          items:
+            $ref: "#/components/schemas/ValueList"
+        subjects:
+          type: array
+          description: Array of subjects (individual or legal entities) connected to the Quotation
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                description: Flag to determine the subjet type
+                enum:
+                  - LEGAL_ENTITY
+                  - INDIVIDUAL
+              entity:
+                type: object
+                oneOf:
+                  - $ref: "#/components/schemas/LegalEntity"
+                  - $ref: "#/components/schemas/Individual"
+
+    Discount:
+      type: object
+      required:
+        - id
+        - gross_discount
+        - net_discount
+      properties:
+        total:
+          type: number
+          format: double
+          description: Gross discount by type of discount
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              amount:
+                type: number
+                format: double
+                description: Net discount by type of discount
+              percent:
+                type: number
+                format: double
+                description: Net discount by type of discount
+
+
+    # nested fields to be discussed with the team
+    LegalEntity:
+      type: object
+      required:
+        - status_code
+        - capital
+        - registration
+      properties:
+        id:
+          type: string
+          description: The Company identification code
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        tax:
+          type: string
+          description: Company tax code
+        name:
+          type: string
+          description: Business name
+        form:
+          type: string
+          description: Legal form
+          enum:
+            - SPA
+            - SRL
+            - SAS
+        status_code:
+          type: string
+          description: Activity status code
+          # TBD
+          enum:
+            - A
+            - B
+            - C
+        capital:
+          type: object
+          description: Social capital
+          properties:
+            currency:
+              type: string
+              description: Currency code
+              example: EUR
+            amount:
+              type: number
+              format: double
+        registration:
+          type: object
+          properties:
+            date:
+              type: string
+              format: date-time
+              description: Registration date of legal entity
+            country:
+              type: string
+              description: ISO 3166 country code
+            main_company:
+              type: string
+              description: The Main company this one is a branch of
+        codes:
+          type: object
+          properties:
+            sae:
+              type: string
+            rae:
+              type: string
+            ateco:
+              type: string
+        contacts:
+          type: array
+          items:
+            type: object
+            properties:
+              role:
+                type: string
+                description: Role in company
+              lang:
+                type: string
+                description: ISO 639-1 language code
+              constact:
+                $ref: "#/components/schemas/Individual"
+      # TODO
+      example:
+        id: d290f1ee-6c54-4b01-90e6-d701748f0851
+        tax: RSSMRA75L01H501A
+        addresses:
+          - sensitivity: HOME
+            street: Via Risorgimento, 4
+            city: Roma
+            country: IT
+            zip_code: 10000
+            default: true
+        phones:
+          - type: PHONE_MOBILE
+            sensitivity: HOME
+            value: 333 333333
+            default: true
+        emails:
+          - type: EMAIL
+            sensitivity: HOME
+            value: 333 333333
+            default: true
+        identifications:
+          - type: ID_CARD
+            code: CA254689874CH
+            expiration: 2008-09-22T14:01:54.9571247Z
+            released_on: 2008-09-22T14:01:54.9571247Z
+            released_by: Comune di Roma
+            released_in: IT
+
+    Individual:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The Company identification code
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        names:
+          type: object
+          properties:
+            first:
+              type: string
+            middle:
+              type: string
+            last:
+              type: string
+            title:
+              type: string
+        gender:
+          type: string
+          description: Gender
+          enum:
+            - MALE
+            - FEMALE
+        marital_status:
+          type: string
+          description: The marital status
+          enum:
+            - SINLGE
+            - MARRIED
+            - DIVORCED
+        nationality:
+          type: string
+          description: ISO 3166 country code
+        cityzenship1:
+          type: string
+          description: ISO 3166 country code
+        cityzenship2:
+          type: string
+          description: ISO 3166 country code
+        tax:
+          type: string
+          description: Individual tax code
+        addresses:
+          type: array
+          items:
+            $ref: "#/components/schemas/Address"
+        phones:
+          type: array
+          description: Array of Contact Item filtered by type of phone
+          items:
+            $ref: "#/components/schemas/Contact"
+        emails:
+          type: array
+          description: Array of Contact Item filtered by type of email
+          items:
+            $ref: "#/components/schemas/Contact"
+        identifications:
+          type: array
+          description: List of information relating to the individual's IdentificationDocuments
+          items:
+            $ref: "#/components/schemas/IdentificationDocument"
+      example:
+        id: d290f1ee-6c54-4b01-90e6-d701748f0851
+        names:
+          first: Mario
+          middle: Andrea
+          last: Rossi
+          title: Ingegnere
+        gender: MALE
+        marital_status: MARRIED
+        nationality: IT
+        cityzenship1: IT
+        cityzenship2: IT
+        tax: RSSMRA75L01H501A
+        addresses:
+          - sensitivity: HOME
+            street: Via Risorgimento, 4
+            city: Roma
+            country: IT
+            zip_code: 10000
+            default: true
+        phones:
+          - type: PHONE_MOBILE
+            sensitivity: HOME
+            value: 333 333333
+            default: true
+        emails:
+          - type: EMAIL
+            sensitivity: HOME
+            value: 333 333333
+            default: true
+        identifications:
+          - type: ID_CARD
+            code: CA254689874CH
+            expiration: 2008-09-22T14:01:54.9571247Z
+            released_on: 2008-09-22T14:01:54.9571247Z
+            released_by: Comune di Roma
+            released_in: IT
+
+    IdentificationDocument:
+      type: object
+      description: IdentificationDocument Document
+      required:
+        - type
+        - released
+      properties:
+        type:
+          type: string
+          enum:
+            - ID_CARD
+            - PASSPORT
+            - DRIVING_LICENSE
+            - OTHER
+        code:
+          type: string
+        expiration:
+          type: string
+          format: date-time
+        released_on:
+          type: string
+          format: date-time
+        released_in:
+          type: string
+          description: ISO 3166 country code
+        released_by:
+          type: string
+
+    Address:
+      type: object
+      description: Address object
+      properties:
+        sensitivity:
+          $ref: "#/components/schemas/Sensitivity"
+        street:
+          type: string
+          description: Street name
+        city:
+          type: string
+          description: City name
+        country:
+          type: string
+          description: ISO 3166 country code
+        zip_code:
+          type: string
+          description: Postal code
+        default:
+          type: boolean
+          description: Falg to determine if this item is the default address
+
+    Sensitivity:
+      type: string
+      description: Sensitivity values
+      enum:
+        - HOME
+        - WORK
+        - ASSISTANT
+        - OTHER
+
+    Contact:
+      type: object
+      description: Contact details item
+      properties:
+        type:
+          type: string
+          description: Type of contact, sometimes referred as channel
+          enum:
+            - PHONE_LAND
+            - PHONE_MOBILE
+            - FAX
+            - EMAIL
+            - TWITTER
+            - FACEBOOK
+            - TELEGRAM
+        sensitivity:
+          $ref: "#/components/schemas/Sensitivity"
+        value:
+          oneOf:
+            - type: string
+            - type: number
+        default:
+          type: boolean
+          description: Flag to determine if the contact item is the default channel
+
+    Premium:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - ALLA_FIRMA
+            - AL_RINNOVO
+            - ...?
+        splitting:
+          type: string
+          description: Constant that identifies the type of payment split.
+          enum:
+            - ONE_SHOT
+            - BIWEEKLY
+            - MONTHLY
+            - QUARTER
+            - SEMESTER
+            - ANNUAL
+        gross:
+          type: number
+          format: double
+        net:
+          type: number
+          format: double
+        ssn:
+          type: number
+          format: double
+        no_tax:
+          type: number
+          format: double
+        discount_percent:
+          type: number
+          format: double
+        discount_amount:
+          type: number
+          format: double
+
+    Document:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        type:
+          type: string
+          description: Type code that identifies the type of document. It must be agreed with the company
+        description:
+          type: string
+        template_id:
+          type: string
+          format: uuid
+          description: Template of document. It must be agreed with the company.
+        proposal_id:
+          type: string
+          format: uuid
+          description: The Proposal Id this document refers to. If null, the field “policyId” must be filled
+        policy_id:
+          type: string
+          format: uuid
+          description: The Policy Id this document refers to. If null, the field “proposalId” must be filled
+        signature_mode:
+          type: string
+          description: How this document must be signed
+          enum:
+            - DIGITAL
+            - PAPER
+        # consider the usage of a pointer to a file descriptor instead of embedding the BLOB
+        data:
+          type: string
+          description: Base64 representation of the document bytes
+
+    Warranty:
+      type: object
+      required:
+        - id
+        - state
+        - description
+        - category_id
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        title:
+          type: string
+        description:
+          type: string
+          description: Description of the Warranty
+        category_id:
+          type: string
+          description: The aggregation key for this type/cetegory of warranty
+        state:
+          type: object
+          properties:
+            enabled:
+              type: boolean
+              description: this field determines if the warranty is selectable (enabled)
+            selected:
+              type: boolean
+              description: This field is for comsumption of the client only, could be used to track the user selection
+            required:
+              type: boolean
+              description: This field overrides "enabled" forcing it to be true
+        selection_rules:
+          $ref: "#/components/schemas/SelectionRuleSet"
+        # TBD premium_rules: min, max, etc
+
+    SelectionRule:
+      type: object
+      properties:
+        warranty_id:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+          description: Points to a Warranty
+        state:
+          type: string
+          description: One possible value among...
+          enum:
+            - enabled
+            - required
+            - selected
+        value:
+          type: boolean
+        invalidate_error:
+          type: object
+          properties:
+            code:
+              type: string
+            description:
+              type: string
+              description: Default *English* error message
+
+    SelectionRuleSet:
+      type: object
+      description: Set of selection rules for client validation
+      properties:
+        required:
+          type: array
+          items:
+            $ref: "#/components/schemas/SelectionRule"
+        enabled:
+          type: array
+          items:
+            $ref: "#/components/schemas/SelectionRule"
+        selected:
+          type: array
+          items:
+            $ref: "#/components/schemas/SelectionRule"
+
+    Product:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        warranties:
+          type: array
+          items:
+            type: object
+            properties:
+              warranty:
+                $ref: "#/components/schemas/Warranty"
+              selection_rules:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SelectionRuleSet"
+        tooltips:
+          type: array
+          items:
+            type: object
+            properties:
+              path:
+                type: string
+                description: The field path for the tooltip
+              title:
+                type: string
+                description: The tooltip title
+              description:
+                type: string
+                description: The tooltip description
+        surveys:
+          type: array
+          items:
+            type: object
+            description: The Surveys array, the order of items is semantic
+            properties:
+              survey_id:
+                type: string
+                description: The Survey Id
+        assets:
+          type: array
+          items:
+            type: object
+            properties:
+              asset_id:
+                type: string
+                description: The Asset array, the order of items is semantic
+
+    ValueList:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        values:
+          type: array
+          items:
+            $ref: "#/components/schemas/ValueListItem"
+
+    ValueListItem:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The value list item identification code
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        title:
+          type: string
+          description: The value list item title
+        value:
+          anyOf:
+            - type: string
+            - type: number

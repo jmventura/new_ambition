@@ -1,0 +1,1458 @@
+openapi: 3.0.0
+servers:
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/jmventura/new_ambition/1.1.0
+info:
+  description: New Ambition REST API
+  version: 1.2.0
+  title: New Ambition
+  contact:
+    email: federico.pastore@bnlmail.com
+  license:
+    name: Apache 2.0
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+paths:
+  /products:
+    get:
+      description: Get Product list
+      parameters:
+        - in: query
+          name: category
+          description: The Product category
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      description: The Product Id
+                      format: uuid
+                      example: d290f1ee-6c54-4b01-90e6-d701748f0851
+                    product_categories:
+                      type: array
+                      items:
+                        properties:
+                          id:
+                            type: string
+                            format: uuid
+                            example: d290f1ee-6c54-4b01-90e6-d701748f0851
+                            description: The category Id
+                    title:
+                      type: string
+                    description:
+                      type: string
+              example:
+                - id: 0ec7ac28-344b-4c91-a52b-b52d02501229
+                  product_categories:
+                    - c5952782-7ede-4a51-857a-e305808bbc8c # Protezione delle persone
+                  title: Unica
+                  description: Unica è un prodotto...
+                - id: 361f4b47-b1ae-4061-a804-e41b5f134e8a
+                  product_categories:
+                    - 0ec7ac28-344b-4c91-a52b-b52d02501229 # Protezione dei beni
+                    - 93d7522b-71a1-4e40-81ec-a0ebeb8aec9f # Protezione dell'abitazione
+                  title: Casa
+                  description: Casa è un prodotto...
+                - id: d290f1ee-6c54-4b01-90e6-d701748f0851
+                  product_categories:
+                    - cd4bcf69-251e-4bc4-867c-16bf5778cc8b # Protezione dei finanziamenti
+                  title: XY
+                  description: Vita è un prodotto...
+
+  /products/{id}:
+    get:
+      description: Get product by Id
+      parameters:
+        - in: path
+          name: id
+          description: The Document Id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+              example:
+                id: c5952782-7ede-4a51-857a-e305808bbc8c
+                title: Unica
+                description: Unica è un prodotto...
+                product_categories:
+                  - c5952782-7ede-4a51-857a-e305808bbc8c # Protezione delle persone
+                configurable_assets:
+                  - asset:
+                      id: 67b59e66-37dc-420d-b13a-a48cf0487ff1
+                      title: Persona fisica
+                      description: Asset che rappresenta una Persona fisica
+                      type: PERSON
+                      attributes:
+                        names:
+                          first: Mario
+                          middle: Andrea
+                          last: Rossi
+                          title: Ingegnere
+                          gender: MALE
+                          dates:
+                            birth: 1978-09-22T14:01:54.9571247Z
+                          marital_status: MARRIED
+                          nationality: IT
+                          cityzenship1: IT
+                          cityzenship2: IT
+                          tax: RSSMRA75L01H501A
+                          addresses:
+                            - sensitivity: HOME
+                              street: Via Risorgimento, 4
+                              city: Roma
+                              country: IT
+                              zip_code: 10000
+                              default: true
+                          phones:
+                            - type: PHONE_MOBILE
+                              sensitivity: HOME
+                              value: 333 333333
+                              default: true
+                          emails:
+                            - type: EMAIL
+                              sensitivity: HOME
+                              value: 333 333333
+                              default: true
+                          identifications:
+                            - type: ID_CARD
+                              code: CA254689874CH
+                              expiration: 2008-09-22T14:01:54.9571247Z
+                              released_on: 2008-09-22T14:01:54.9571247Z
+                              released_by: Comune di Roma
+                              released_in: IT
+                      required_fields:
+                        - "$.dates.birth"
+                        - "$.gender"
+                      guarantee_bundles:
+                        - id: 900d807a-49fc-4a81-81a3-acd4a4addb32
+                          title: The bundle title
+                          description: The bundle description
+                          state:
+                            enabled: true
+                            selected: true
+                            required: true
+                          selection_rules:
+                            - target_state: selected
+                              rules:
+                                - entity_id: 0df85458-1e09-410b-a3f2-ac4b79a5d91a
+                                  state: selected
+                                  value: true
+                                - entity_id: a217c269-c848-4d49-9234-83d187863800
+                                  state: selected
+                                  value: true
+                          surveys:
+                            - id: 5932d5db-109b-407d-9e66-b3e21cb5e812
+                              required: true
+                          guarrantees:
+                            - id: 685329dd-d177-441b-9420-27d88e8895e8
+                              title: The guarantee title
+                              description: The guarantee description
+                              guarantee_category_id: 3da8848e-e8df-47c6-a05d-50b543eb7083
+                              state:
+                                enabled: true
+                                selected: true
+                                required: true
+                                selection_rules:
+                                  - target_state: selected
+                                    rules:
+                                      - entity_id: fec2911d-03eb-47cd-beeb-8913aefac4a6
+                                        state: selected
+                                        value: true
+                              premium_cap:
+                                title: The premium cap title to be used as menu item
+                                description: The premium cap description to be use as tooltip or such
+                                value: 120000
+                                children:
+                                  title: The premium cap title to be used as menu item of second level
+                                  description: The premium cap description to be use as tooltip or such
+                                  value: 60000
+                              surveys:
+                                - id: 03d5e69c-7612-4b94-a5ac-52b9cfdaef36
+                                  required: true
+                                - id: e0af6c30-af1a-4543-99c6-86ab7ac20602
+                                  required: false
+                surveys:
+                  - id: 056f91bd-c6ce-4913-b309-19816ccf65e5
+                    required: true
+                  - id: babe566b-08f7-4e6c-b293-c541b707765e
+                    required: false
+                available_promotions:
+                  - 291dfb4c-b6f7-48ab-b287-93779d942cc7
+                  - e6d767dc-fc35-4bd4-8902-54baeeb58a53
+
+  /surveys:
+    get:
+      summary: List available Surveys for a given Product
+      operationId: listSurveys
+      description: All the available Surveys for a given Product can be listed by passing in the appropriate Product Id
+      parameters:
+        - in: query
+          name: product_id
+          description: pass the Product Id to list the available Surveys
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - in: query
+          name: survey_type_id
+          #TODO
+          description: TODO
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - in: query
+          name: subject_type
+          required: true
+          schema:
+            type: string
+            enum:
+              - INDIVIDUAL
+              - LEGAL_ENTITY
+      responses:
+        "200":
+          description: Surveys matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  properties:
+                    id:
+                      description: The Survey Id
+                      type: string
+                      format: uuid
+                    title:
+                      description: The Survey title
+                      type: string
+                    description:
+                      description: The Survey description
+                      type: string
+        "400":
+          description: bad input parameter
+  /survey/{id}:
+    get:
+      summary: Get Survey by Id
+      operationId: getSurvey
+      description: Get a single Survey by passing its Id
+      parameters:
+        - in: path
+          name: id
+          description: pass the Survey Id to get Survey object
+          required: true
+          schema:
+            type: string
+            format: uuid
+
+      responses:
+        "200":
+          description: Survey matching Id
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Survey"
+        "400":
+          description: bad input parameter
+  # ADD get /survey/{survey_id}/submissions/{submission_id}
+  /survey/{id}/submissions:
+    post:
+      summary: Submit a Survey result
+      operationId: submitSurvey
+      description: Evaluate a Survey Submission before to move forward the sales process
+      parameters:
+        - in: path
+          name: id
+          description: pass the Survey Id to submit the Survey result
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        description: The Survey results Submission
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SurveySubmission"
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum:
+                      - SUCCESS
+                      - WARNING
+                      - FAIL
+                  messages:
+                    type: array
+                    items:
+                      type: string
+  /quotations:
+    post:
+      summary: Create a Quotation
+      operationId: createQuotation
+      description: Create a Product Quotation
+      requestBody:
+        description: The Quotation to be created
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProductConfiguration"
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Quotation"
+
+  /quotations/{id}:
+    # For the sake of REST compliance this resource MUST be treated as such, therefore any mutation must be implemented as an CRUD operation in the form of a PUT or PATCH HTTP method
+    put:
+      operationId: updateQuotation
+      description: Upgrade or Downgrade a product Quotation
+      parameters:
+        - in: path
+          name: id
+          description: The Quotation Id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        description: The Quotation to be updated
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                quotation:
+                  $ref: "#/components/schemas/ProductConfiguration"
+      responses:
+        204:
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Quotation"
+
+  /value-lists:
+    get:
+      summary: List all available value lists
+      operationId: listValuelists
+      description: List all available value lists
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ValueList"
+
+  /value-lists/{id}:
+    get:
+      summary: Get a value list items
+      operationId: getValuelists
+      description: Get a value list items
+      parameters:
+        - in: path
+          name: id
+          description: The value list id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValueList"
+
+components:
+  schemas:
+
+    Survey:
+      type: object
+      required:
+        - id
+        - product_id
+        - title
+        - questions
+      properties:
+        id:
+          type: string
+          description: The Product identification code for the Product the Survey applies to
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        product_id:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        survey_type_id:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+          description: This field represents a Survey Type coming from a value list
+        title:
+          type: string
+          example: Questionario ABC...
+        description:
+          type: string
+        sections:
+          type: array
+          items:
+            type: object
+            properties:
+              title:
+                type: string
+              description:
+                type: string
+              questions:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SurveyQuestion"
+
+    SurveyQuestion:
+      type: object
+      required:
+        - id
+        - title
+        - choices
+        - multiple
+        - required
+      properties:
+        id:
+          type: string
+          description: The Question identification code
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        title:
+          type: string
+          example: Question 1...
+        description:
+          type: string
+          description: This field can be used as a tooltip for any front end
+        choices:
+          type: array
+          items:
+            $ref: "#/components/schemas/SurveyQuestionChoice"
+        multiple:
+          type: boolean
+        required:
+          type: boolean
+          default: true
+        default:
+          description: The default choice Id. In case it's absent no choice is to be considered selected
+          type: array
+          items:
+            type: string
+
+    SurveyQuestionChoice:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: string
+          description: The Choice identification code
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        title:
+          type: string
+          example: Choice 1...
+        description:
+          type: string
+          description: This field can be used as a tooltip for any front end
+
+    SurveyQuestionAnswer:
+      type: object
+      required:
+        - question_id
+        - answers
+      properties:
+        question_id:
+          type: string
+          description: The Question identification code
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        answers:
+          description: The answers given by the user
+          type: array
+          items:
+            type: object
+            properties:
+              choice_id:
+                type: string
+                description: The Choice identification code
+                format: uuid
+                example: d290f1ee-6c54-4b01-90e6-d701748f0851
+              value:
+                type: string
+                description: The user selection
+                example: the user selection
+
+    SurveySubmission:
+      type: object
+      properties:
+        survey_id:
+          type: string
+          description: The Survey identification code
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        customer_id:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        product_id:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        answers:
+          type: array
+          items:
+            $ref: "#/components/schemas/SurveyQuestionAnswer"
+
+    ProductConfiguration:
+      description: This object represents the needed data to request a Quotation Primium calculation.
+      properties:
+        product_id:
+          type: string
+        configured_assets:
+          type: array
+          items:
+            $ref: '#/components/schemas/AssetConfiguration'
+        effect_date:
+          type: string
+          format: date-time
+          description: Date from which the insurance policy takes effect
+        contractor:
+          oneOf:
+            - $ref: "#/components/schemas/Individual"
+            - $ref: "#/components/schemas/LegalEntity"
+        agreements:
+          type: array
+          description: Array of customer agreements codes comming from the bank systems
+          items:
+            type: string
+        survey_submissions:
+          type: array
+          items:
+            $ref: '#/components/schemas/SurveySubmission'
+        applied_promos:
+          description: The collection of applied Promotions
+          type: array
+          items:
+            properties:
+              id:
+                type: string
+                description: The selected promo Id
+
+    AssetConfiguration:
+      description: The set of configurations to define a quoted asset
+      properties:
+        asset:
+          $ref: "#/components/schemas/Asset"
+        configured_bundles:
+          type: array
+          items:
+            $ref: '#/components/schemas/BundleConfiguration'
+
+    BundleConfiguration:
+      description: The set of configurations to a Bundle
+      properties:
+        id:
+          type: string
+        applied_promos:
+          description: The collection of applied Promotions
+          type: array
+          items:
+            properties:
+              id:
+                type: string
+                description: The selected promo Id
+        configured_guarantees:
+          type: array
+          description: The collection of configured guaranteed
+          items:
+            $ref: '#/components/schemas/GuaranteeConfiguration'
+
+    GuaranteeConfiguration:
+      description: The set of configurations to a Guarantee
+      properties:
+        id:
+          type: string
+          description: The Guarantee Id
+        premium_cap:
+          description: The selected Premoum Cap value
+          type: number
+          format: double
+        applied_promos:
+          description: The collection of applied Promotions
+          type: array
+          items:
+            properties:
+              id:
+                type: string
+                description: The selected promo Id
+
+    GuaranteeQuotation:
+      description: The quoted Guarantee, including premiums and eventual discounts
+      properties:
+        id:
+          type: string
+          description: The Guarantee Id
+        premium_cap:
+          description: The selected Premoum Cap value
+          type: number
+          format: double
+        applied_promos:
+          description: The collection of applied Promotions
+          type: array
+          items:
+            properties:
+              id:
+                type: string
+                description: The selected promo Id
+        premiums:
+          type: array
+          items:
+            $ref: '#/components/schemas/Premium'
+        discounts:
+          type: array
+          items:
+            $ref: '#/components/schemas/Discount'
+
+    BundleQuotation:
+      description: The quoted bundle, including premoums and eventual discouts
+      properties:
+        premiums:
+          type: array
+          items:
+            $ref: '#/components/schemas/Premium'
+        discounts:
+          type: array
+          items:
+            $ref: '#/components/schemas/Discount'
+        quoted_guarantees:
+          type: array
+          description: The collection of quoted guaranteed
+          items:
+            $ref: '#/components/schemas/GuaranteeQuotation'
+
+    AssetQuotation:
+      description: The set of configurations to define a quoted asset
+      properties:
+        asset:
+          $ref: "#/components/schemas/Asset"
+        quoted_bundles:
+          type: array
+          items:
+            $ref: '#/components/schemas/BundleQuotation'
+        premiums:
+          type: array
+          items:
+            $ref: '#/components/schemas/Premium'
+        discounts:
+          type: array
+          items:
+            $ref: '#/components/schemas/Discount'
+
+    Quotation:
+      properties:
+        id:
+          type: string
+          description: The Quotation identification code
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        product_id:
+          type: string
+          description: Unique code of the product
+        effect_date:
+          type: string
+          format: date-time
+          description: Date from which the insurance policy takes effect
+        agreements:
+          type: array
+          description: Array of customer agreements codes comming from the bank systems
+          items:
+            type: string
+        subjects:
+          # TBD, maybe just the contractor is required at this level, the rest of the subjects should be defined at the asset level
+          type: array
+          description: Array of subjects (individual or legal entities) connected to the Quotation
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                description: Flag to determine the subjet type
+                enum:
+                  - LEGAL_ENTITY
+                  - INDIVIDUAL
+              role:
+                type: string
+                enum:
+                  - CONTRAENTE
+                  - BENEFICIARIO
+                  - ASSICURATO
+              item:
+                type: object
+                oneOf:
+                  - $ref: "#/components/schemas/Individual"
+                  - $ref: "#/components/schemas/LegalEntity"
+        quoted_assets:
+          type: array
+          items:
+            properties:
+              asset:
+                $ref: "#/components/schemas/AssetQuotation"
+        premiums:
+          type: array
+          items:
+            $ref: "#/components/schemas/Premium"
+        discounts:
+          type: array
+          description: Array of discounts applied; the total discount amount MUST be calculated by summing all the items together
+          items:
+            $ref: "#/components/schemas/Discount"
+        product_configuration:
+          description: The configuration object from which the Quotation has been calucated
+          allOf:
+            - $ref: '#/components/schemas/ProductConfiguration'
+
+    Asset:
+      type: object
+      description: This entity describes an Insurable Asset
+      properties:
+        id:
+          type: string
+          description: The Asset identification code
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        title:
+          type: string
+          description: The Asset title
+        description:
+          type: string
+          description: The Asset description
+        type:
+          description: Asset type to be insured (this can be come from a value list instead)
+          type: string
+          enum:
+            - PERSON
+            - VEHICLE
+            - BUILDING
+            - FINANCE
+        attributes:
+          description: Set of attributed needed for this Asset to be insured
+          type: array
+          items:
+            properties:
+              required:
+                type: boolean
+                default: true
+              type:
+                oneOf:
+                  - $ref: '#/components/schemas/Building'
+                  - $ref: '#/components/schemas/Vehicle'
+                  - $ref: '#/components/schemas/Finance'
+                  - $ref: '#/components/schemas/Individual'
+                  - $ref: '#/components/schemas/LegalEntity'
+
+    Building:
+      properties:
+        title:
+          type: string
+
+    Finance:
+      properties:
+        title:
+          type: string
+
+    Vehicle:
+      properties:
+        title:
+          type: string
+
+    Discount:
+      type: object
+      required:
+        - id
+        - gross_discount
+        - net_discount
+      properties:
+        total:
+          type: number
+          format: double
+          description: Gross discount by type of discount
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              amount:
+                type: number
+                format: double
+                description: Net discount by type of discount
+              percent:
+                type: number
+                format: double
+                description: Net discount by type of discount
+
+    LegalEntity:
+      type: object
+      required:
+        - status_code
+        - capital
+        - registration
+      properties:
+        id:
+          type: string
+          description: The Company identification code
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        tax_code:
+          type: string
+          description: Company tax code
+        name:
+          type: string
+          description: Business name
+        form:
+          type: string
+          description: Legal form
+          enum:
+            - SPA
+            - SRL
+            - SAS
+        status_code:
+          type: string
+          description: Activity status code
+          # TBD
+          enum:
+            - A
+            - B
+            - C
+        capital:
+          type: object
+          description: Social capital
+          properties:
+            currency:
+              type: string
+              description: Currency code
+              example: EUR
+            amount:
+              type: number
+              format: double
+        registration:
+          type: object
+          properties:
+            date:
+              type: string
+              format: date-time
+              description: Registration date of legal entity
+            country:
+              type: string
+              description: ISO 3166 country code
+            main_company:
+              type: string
+              description: The Main company this one is a branch of
+        codes:
+          type: object
+          properties:
+            sae:
+              type: string
+            rae:
+              type: string
+            ateco:
+              type: string
+        contacts:
+          type: array
+          items:
+            type: object
+            properties:
+              role:
+                type: string
+                description: Role in company
+              lang:
+                type: string
+                description: ISO 639-1 language code
+              constact:
+                $ref: "#/components/schemas/Individual"
+      # TODO
+      example:
+        id: d290f1ee-6c54-4b01-90e6-d701748f0851
+        tax: RSSMRA75L01H501A
+        addresses:
+          - sensitivity: HOME
+            street: Via Risorgimento, 4
+            city: Roma
+            country: IT
+            zip_code: 10000
+            default: true
+        phones:
+          - type: PHONE_MOBILE
+            sensitivity: HOME
+            value: 333 333333
+            default: true
+        emails:
+          - type: EMAIL
+            sensitivity: HOME
+            value: 333 333333
+            default: true
+        identifications:
+          - type: ID_CARD
+            code: CA254689874CH
+            expiration: 2008-09-22T14:01:54.9571247Z
+            released_on: 2008-09-22T14:01:54.9571247Z
+            released_by: Comune di Roma
+            released_in: IT
+
+    Individual:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The Company identification code
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        names:
+          type: object
+          properties:
+            first:
+              type: string
+            middle:
+              type: string
+            last:
+              type: string
+            title:
+              type: string
+        gender:
+          type: string
+          description: Gender
+          enum:
+            - MALE
+            - FEMALE
+        dates:
+          properties:
+            birth:
+              type: string
+              format: date-time
+        marital_status:
+          type: string
+          description: The marital status
+          enum:
+            - SINLGE
+            - MARRIED
+            - DIVORCED
+        nationality:
+          type: string
+          description: ISO 3166 country code
+        cityzenship1:
+          type: string
+          description: ISO 3166 country code
+        cityzenship2:
+          type: string
+          description: ISO 3166 country code
+        tax:
+          type: string
+          description: Individual tax code
+        addresses:
+          type: array
+          items:
+            $ref: "#/components/schemas/Address"
+        phones:
+          type: array
+          description: Array of Contact Item filtered by type of phone
+          items:
+            $ref: "#/components/schemas/ContactInfo"
+        emails:
+          type: array
+          description: Array of Contact Item filtered by type of email
+          items:
+            $ref: "#/components/schemas/ContactInfo"
+        identifications:
+          type: array
+          description: List of information relating to the individual's IdentificationDocuments
+          items:
+            $ref: "#/components/schemas/IdCard"
+      example:
+        id: d290f1ee-6c54-4b01-90e6-d701748f0851
+        names:
+          first: Mario
+          middle: Andrea
+          last: Rossi
+          title: Ingegnere
+        gender: MALE
+        marital_status: MARRIED
+        nationality: IT
+        cityzenship1: IT
+        cityzenship2: IT
+        tax: RSSMRA75L01H501A
+        addresses:
+          - sensitivity: HOME
+            street: Via Risorgimento, 4
+            city: Roma
+            country: IT
+            zip_code: 10000
+            default: true
+        phones:
+          - type: PHONE_MOBILE
+            sensitivity: HOME
+            value: 333 333333
+            default: true
+        emails:
+          - type: EMAIL
+            sensitivity: HOME
+            value: 333 333333
+            default: true
+        identifications:
+          - type: ID_CARD
+            code: CA254689874CH
+            expiration: 2008-09-22T14:01:54.9571247Z
+            released_on: 2008-09-22T14:01:54.9571247Z
+            released_by: Comune di Roma
+            released_in: IT
+
+    IdCard:
+      type: object
+      description: Identification Document
+      required:
+        - type
+        - released
+      properties:
+        type:
+          type: string
+          enum:
+            - ID_CARD
+            - PASSPORT
+            - DRIVING_LICENSE
+            - OTHER
+        code:
+          type: string
+        expiration:
+          type: string
+          format: date-time
+        released_on:
+          type: string
+          format: date-time
+        released_in:
+          type: string
+          description: ISO 3166 country code
+        released_by:
+          type: string
+
+    Address:
+      type: object
+      description: Address object
+      properties:
+        sensitivity:
+          $ref: "#/components/schemas/Sensitivity"
+        street:
+          type: string
+          description: Street name
+        city:
+          type: string
+          description: City name
+        country:
+          type: string
+          description: ISO 3166 country code
+        zip_code:
+          type: string
+          description: Postal code
+        default:
+          type: boolean
+          description: Falg to determine if this item is the default address
+
+    Sensitivity:
+      type: string
+      description: Sensitivity values
+      enum:
+        - HOME
+        - WORK
+        - ASSISTANT
+        - OTHER
+
+    ContactInfo:
+      type: object
+      description: Contact details item
+      properties:
+        type:
+          type: string
+          description: Type of contact, sometimes referred as channel
+          enum:
+            - PHONE_LAND
+            - PHONE_MOBILE
+            - FAX
+            - EMAIL
+            - TWITTER
+            - FACEBOOK
+            - TELEGRAM
+        sensitivity:
+          $ref: "#/components/schemas/Sensitivity"
+        value:
+          oneOf:
+            - type: string
+            - type: number
+        default:
+          type: boolean
+          description: Flag to determine if the contact item is the default channel
+
+    Premium:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - ALLA_FIRMA
+            - AL_RINNOVO
+            - ...?
+        splitting:
+          type: string
+          description: Constant that identifies the type of payment split.
+          enum:
+            - UNA_TANTUM
+            - BIWEEKLY
+            - MONTHLY
+            - QUARTERLY
+            - SEMIANNUALLY
+            - ANNUALLY
+        gross:
+          type: number
+          format: double
+        net:
+          type: number
+          format: double
+        ssn:
+          type: number
+          format: double
+        no_tax:
+          type: number
+          format: double
+        discount_percent:
+          type: number
+          format: double
+        discount_amount:
+          type: number
+          format: double
+
+    PremiumCap:
+      description: The
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        value:
+          type: number
+        children:
+          $ref: '#/components/schemas/PremiumCap'
+
+    Document:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        type:
+          type: string
+          description: Type code that identifies the type of document. It must be agreed with the company
+        description:
+          type: string
+        template_id:
+          type: string
+          format: uuid
+          description: Template of document. It must be agreed with the company.
+        proposal_id:
+          type: string
+          format: uuid
+          description: The Proposal Id this document refers to. If null, the field “policyId” must be filled
+        policy_id:
+          type: string
+          format: uuid
+          description: The Policy Id this document refers to. If null, the field “proposalId” must be filled
+        signature_mode:
+          type: string
+          description: How this document must be signed
+          enum:
+            - DIGITAL
+            - PAPER
+        # consider the usage of a pointer to a file descriptor instead of embedding the BLOB
+        data:
+          type: string
+          description: Base64 representation of the document bytes
+
+    SelectionRule:
+      type: object
+      description: |
+        This rule expresses the dependencies to define a single item state [required, enabled, selected] for a single
+        depending entity. In case it resolves to "false" a proper error object should be provided as "invalid_state_error"
+      properties:
+        entity_id:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+          description: The Id reference of the entity this rule depends on
+        state:
+          type: string
+          description: The entity state field to be evaluated by this rule
+          enum:
+            - enabled
+            - required
+            - selected
+        value:
+          type: boolean
+          description: The value (true or false) of the entity state field for the rule to be valid
+        invalid_state_error:
+          type: object
+          description: Optional object to eventually describe the the rule constraint
+          properties:
+            code:
+              type: string
+              description: Eventual error code (usefull in case a Value List would be used)
+            description:
+              type: string
+              description: Default error message or hint
+
+    Product:
+      description: This entity describes the meta data needed to sell this insurance product. It is read only
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        title:
+          type: string
+        description:
+          type: string
+        product_categories:
+          type: array
+          description: This field clusters products together by one or more categories. The values come from a value list
+          items:
+            type: string
+        configurable_assets:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConfigurableAsset'
+        surveys:
+          description: Surveys needed at the Product level
+          type: array
+          items:
+            $ref: '#/components/schemas/SurveyItem'
+        available_promotions:
+          description: Array of promo Ids
+          type: array
+          items:
+            $ref: '#/components/schemas/Promotion'
+
+    ConfigurableAsset:
+      properties:
+        asset:
+          $ref: '#/components/schemas/Asset'
+        required_fields:
+          type: array
+          items:
+            description: |
+              Array of JSONPath (https://goessner.net/articles/JsonPath/) expressions
+              defining the required fields for this asset
+            type: string
+        guarantee_bundles:
+          type: array
+          items:
+            $ref: '#/components/schemas/GuaranteeBundle'
+
+    GuaranteeBundle:
+      description: The generic insurance Guaratee entity to be applied to an Asset
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        title:
+          type: string
+        description:
+          type: string
+          description: Description of the Bundle
+        state:
+          type: object
+          description: The state of the bundle defines how the selection rules apply
+          properties:
+            enabled:
+              type: boolean
+              description: this field determines if the bundle is selectable (enabled)
+            selected:
+              type: boolean
+              description: This field is for comsumption of the client only, could be used to track the user selection
+            required:
+              type: boolean
+              description: This field overrides "enabled" forcing it to be true
+        selection_rules:
+          type: array
+          description: Set of rules needed to determine the state of the Bundle.
+          items:
+            type: object
+            properties:
+              target_state:
+                type: string
+                description: The target state field for this rules to evaluate
+                enum:
+                  - enabled
+                  - required
+                  - selected
+              rules:
+                type: array
+                description: |
+                  The set of rules for the target state field.
+                  All rules must resolve to "true" to allow the state transition.
+                items:
+                  $ref: "#/components/schemas/SelectionRule"
+        surveys:
+          type: array
+          description: Surveys needed at the Guarantee Bundle level
+          items:
+            $ref: '#/components/schemas/SurveyItem'
+        guarrantees:
+          type: array
+          items:
+            $ref: '#/components/schemas/Guarantee'
+
+    Guarantee:
+      description: The generic insurance Guaratee entity to be applied to an Asset. It MUST live inside a Bundle
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        title:
+          type: string
+        description:
+          type: string
+          description: Description of the Guarantee
+        guarantee_category_id:
+          type: string
+          description: The aggregation key for this type/cetegory of Guarantee coming from a Value List
+        state:
+          type: object
+          description: The state of the guarantee defines how the selection rules apply
+          properties:
+            enabled:
+              type: boolean
+              description: this field determines if the Guarantee is selectable (enabled)
+            selected:
+              type: boolean
+              description: This field is for comsumption of the client only, could be used to track the user selection
+            required:
+              type: boolean
+              description: This field overrides "enabled" forcing it to be true
+        selection_rules:
+          type: array
+          description: Set of rules needed to determine the state of the guarantee.
+          items:
+            properties:
+              state:
+                type: string
+                description: The target state field for this rules to evaluate
+                enum:
+                  - enabled
+                  - required
+                  - selected
+              rules:
+                type: array
+                description: |
+                  The set of rules for the target state field.
+                  All rules must resolve to "true" to allow the state transition.
+                items:
+                  $ref: "#/components/schemas/SelectionRule"
+        premium_cap:
+          $ref: '#/components/schemas/PremiumCap'
+        surveys:
+          type: array
+          description: Surveys needed at the Guarantee level
+          items:
+            $ref: '#/components/schemas/SurveyItem'
+
+    SurveyItem:
+      properties:
+        required:
+          type: boolean
+        id:
+          description: The survey Id
+          type: string
+
+    Promotion:
+      description: This entity represents a promo configuration object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        title:
+          type: string
+        description:
+          type: string
+        from:
+          type: string
+          format: date-time
+          description: The date from which this promo is active
+        to:
+          type: string
+          format: date-time
+          description: The date until which this promo is active
+
+    ValueList:
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        values:
+          type: array
+          items:
+            $ref: "#/components/schemas/ValueListItem"
+
+    ValueListItem:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The value list item identification code
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        title:
+          type: string
+          description: The value list item title
+        value:
+          anyOf:
+            - type: string
+            - type: number
